@@ -1,2 +1,2 @@
-# tiff-files-to-pdf
- Converts multiple .tiff files into one .pdf file
+# images-to-pdf
+ Converts multiple image files into one .pdf file
