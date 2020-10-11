@@ -12,6 +12,7 @@ extensions = [
     '.jpeg'
 ]
 
+
 layout = [
     [sg.Text('Select image extension to convert:')],
     [
@@ -21,9 +22,15 @@ layout = [
         sg.Radio(extensions[3], "RADIO", key=extensions[3]),
         sg.Radio(extensions[4], "RADIO", key=extensions[4]),
     ],
-    [sg.FolderBrowse('Select folder to convert', key='user_input_path'),
-    sg.Text('Path:'), sg.Text(size=(50,3), key='selected_path')],
-    [sg.Button('Convert', disabled=True), sg.Button('Exit the program')]
+    [sg.Text(' ')],
+    [sg.Input(key='user_input_path', enable_events=True, visible=False)],
+    [sg.FolderBrowse('Select folder to convert', enable_events=True, target='user_input_path', size=(10,2)),
+    sg.Text('Path:', size=(4,3)), sg.Text(size=(50,3), key='selected_path')],
+    [sg.Text(' ')],
+    [
+        sg.Button('Convert', key='convert_btn', disabled=True, button_color=('white', '#2ea44f')),
+        sg.Text(' '),
+        sg.Button('Exit the program', button_color=('white', '#d73a49'))]
           
 ]
 
@@ -34,7 +41,7 @@ window = sg.Window('Convert to PDF', layout)
 while True:
     event, values = window.read()
     print(event, values)
-
+    random = 4
 
     if values[extensions[0]] == True and event == 'Convert':
        sg.Popup("button 1 pressed")
@@ -53,9 +60,10 @@ while True:
     if event == sg.WINDOW_CLOSED or event == 'Exit the program':
         break
 
-    #if event == 'Select folder to convert':
-        #window['selected_path'].update(values['user_input_path'])
-    # Output a message to the window
+    if event == 'user_input_path':
+        window.FindElement('convert_btn').Update(disabled=False)
+
+
     window['selected_path'].update(values['user_input_path'])
 
 # Finish up by removing from the screen
