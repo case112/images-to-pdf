@@ -47,7 +47,6 @@ layout = [
         sg.Button('Exit the program', button_color=('white', '#d73a49'))
     ]      
 ]
-     
 
 def convert():
     global pages
@@ -61,12 +60,10 @@ def convert():
         print("Generating PDF")
         pages[0].save(pdf_path_name, save_all = True, append_images=pages[1:])
 
-
 window = sg.Window('Convert to PDF', layout)
 
 while True:
     event, values = window.read()
-    
 
     if values[extensions[0]] == True and event == 'convert_btn':
        extension += (extensions[0],)
@@ -80,7 +77,6 @@ while True:
        extension += (extensions[4],)
     if values[extensions[5]] == True and event == 'convert_btn':
        extension += (extensions[5],)
-    
     
     if event == sg.WINDOW_CLOSED or event == 'Exit the program':
         break
@@ -98,7 +94,6 @@ while True:
                 sg.Popup('Converted ' + str(len(pages)) + ' images to location: ' + pdf_path_name, title='Done!')
             else:
                 for x in range(len(extension)):
-                    #print(extension[x])
                     ext += str(extension[x]) + ' '
                 sg.Popup('No " ' + ext +'" files found!', title='Error!')
         else:
