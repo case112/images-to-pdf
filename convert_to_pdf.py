@@ -11,7 +11,9 @@ extensions = [
 ]
 
 layout = [
-    [sg.Text('Select image extension to convert:')],
+    [
+        sg.Text('Select image extension to convert:')
+    ],
     [
         sg.Radio(extensions[0], "RADIO", key=extensions[0], default=True),
         sg.Radio(extensions[1], "RADIO", key=extensions[1]),
@@ -19,17 +21,24 @@ layout = [
         sg.Radio(extensions[3], "RADIO", key=extensions[3]),
         sg.Radio(extensions[4], "RADIO", key=extensions[4]),
     ],
-    [sg.Text(' ')],
-    [sg.Input(key='user_input_path', enable_events=True, visible=False)],
+    [
+        sg.Text(' ')
+    ],
+    [
+        sg.Input(key='user_input_path', enable_events=True, visible=False)
+    ],
     [
         sg.FolderBrowse('Select folder to convert', enable_events=True, target='user_input_path', size=(10,2)),
         sg.Text('Path:', size=(4,3)), sg.Text(size=(50,3), key='selected_path')
     ],
-    [sg.Text(' ')],
+    [
+        sg.Text(' ')
+    ],
     [
         sg.Button('Convert', key='convert_btn', disabled=True, button_color=('white', '#2ea44f')),
         sg.Text(' '),
-        sg.Button('Exit the program', button_color=('white', '#d73a49'))]      
+        sg.Button('Exit the program', button_color=('white', '#d73a49'))
+    ]      
 ]
      
 window = sg.Window('Convert to PDF', layout)
