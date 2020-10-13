@@ -1,4 +1,4 @@
-# Convert multiple images (.tif, .dng, .png, .jpg) to a single .pdf file
+# Convert multiple images (.tif, .png, .jpg) to a single .pdf file
 
 ## Easy to use GUI to browse for files and convert
 ![Example on OSX](img/example.png)

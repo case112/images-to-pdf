@@ -11,7 +11,6 @@ file_problem = False
 extensions = (
     '.tif',
     '.tiff',
-    '.dng',
     '.png',
     '.jpg',
     '.jpeg'
@@ -27,7 +26,6 @@ layout = [
         sg.Checkbox(extensions[2], key=extensions[2]),
         sg.Checkbox(extensions[3], key=extensions[3]),
         sg.Checkbox(extensions[4], key=extensions[4]),
-        sg.Checkbox(extensions[5], key=extensions[5]),
     ],
     [
         sg.Text(' ')
@@ -84,8 +82,6 @@ while True:
        extension += (extensions[3],)
     if values[extensions[4]] == True and event == 'convert_btn':
        extension += (extensions[4],)
-    if values[extensions[5]] == True and event == 'convert_btn':
-       extension += (extensions[5],)
     
     if event == sg.WINDOW_CLOSED or event == 'Exit the program':
         break
@@ -98,10 +94,11 @@ while True:
 
     if event == 'convert_btn':
         if extension != ():
+            file_problem = False
             convert()
             if len(pages) > 1:
                 sg.Popup('Converted ' + str(len(pages)) + ' images to location: ' + pdf_path_name, title='Done!')
-            if file_problem == False:
+            if file_problem == False and pages == []:
                 for x in range(len(extension)):
                     ext += str(extension[x]) + ' '
                 sg.Popup('No " ' + ext +'" files found!', title='Error!')
