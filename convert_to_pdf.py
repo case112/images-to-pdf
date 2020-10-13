@@ -4,6 +4,9 @@ import os
 import time
 
 start_path = os.path.expanduser("~/Desktop")
+extension = ()
+ext = ''
+file_problem = False
 
 extensions = (
     '.tif',
@@ -13,12 +16,10 @@ extensions = (
     '.jpg',
     '.jpeg'
 )
-extension = ()
-ext = ''
 
 layout = [
     [
-        sg.Text('Select image extension to convert:')
+        sg.Text('Select file extension to convert:')
     ],
     [
         sg.Checkbox(extensions[0], key=extensions[0]),
@@ -47,15 +48,23 @@ layout = [
         sg.Button('Exit the program', button_color=('white', '#d73a49'))
     ]      
 ]
-
+     
 def convert():
     global pages
+    global file_problem
     pages = []
     for file_in_dir in os.listdir(selected_directory):
         if file_in_dir.lower().endswith(extension):
             file_path = selected_directory + os.sep + file_in_dir
-            page = Image.open(file_path)
-            pages.append(page.convert("RGB"))
+            try:
+                page = Image.open(file_path)
+                pages.append(page.convert("RGB"))
+                page.close()
+            except:
+                pages = []
+                file_problem = True
+                return sg.Popup('There is a problem with "' + file_in_dir + '", it is not possible to convert this file. Aborting. Fix this and please try again.', title='Warning!')
+                
     if pages != []:
         print("Generating PDF")
         pages[0].save(pdf_path_name, save_all = True, append_images=pages[1:])
@@ -64,7 +73,7 @@ window = sg.Window('Convert to PDF', layout)
 
 while True:
     event, values = window.read()
-
+    
     if values[extensions[0]] == True and event == 'convert_btn':
        extension += (extensions[0],)
     if values[extensions[1]] == True and event == 'convert_btn':
@@ -92,7 +101,7 @@ while True:
             convert()
             if len(pages) > 1:
                 sg.Popup('Converted ' + str(len(pages)) + ' images to location: ' + pdf_path_name, title='Done!')
-            else:
+            if file_problem == False:
                 for x in range(len(extension)):
                     ext += str(extension[x]) + ' '
                 sg.Popup('No " ' + ext +'" files found!', title='Error!')
@@ -105,4 +114,3 @@ while True:
     window['selected_path'].update(values['user_input_path'])
 
 window.close()
-
