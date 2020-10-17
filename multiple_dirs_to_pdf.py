@@ -1,7 +1,6 @@
 from PIL import Image
 import PySimpleGUI as sg
 import os
-import time
 
 start_path = os.path.expanduser("~/Desktop")
 extension = ()
@@ -16,17 +15,13 @@ extensions = (
     '.jpeg'
 )
 
+checkboxes = [sg.Checkbox(extensions[i], key=extensions[i]) for i in range(len(extensions))]
+
 layout = [
     [
         sg.Text('Select file extension to convert:')
     ],
-    [
-        sg.Checkbox(extensions[0], key=extensions[0], default=True),
-        sg.Checkbox(extensions[1], key=extensions[1]),
-        sg.Checkbox(extensions[2], key=extensions[2]),
-        sg.Checkbox(extensions[3], key=extensions[3]),
-        sg.Checkbox(extensions[4], key=extensions[4]),
-    ],
+        checkboxes,
     [
         sg.Text(' ')
     ],
@@ -85,17 +80,11 @@ window = sg.Window('Convert to PDF', layout)
 
 while True:
     event, values = window.read()
+
+    for i in range(len(extensions)):
+        if values[extensions[i]] == True and event == 'convert_btn':
+            extension += (extensions[i],)
     
-    if values[extensions[0]] == True and event == 'convert_btn':
-       extension += (extensions[0],)
-    if values[extensions[1]] == True and event == 'convert_btn':
-       extension += (extensions[1],)
-    if values[extensions[2]] == True and event == 'convert_btn':
-       extension += (extensions[2],)
-    if values[extensions[3]] == True and event == 'convert_btn':
-       extension += (extensions[3],)
-    if values[extensions[4]] == True and event == 'convert_btn':
-       extension += (extensions[4],)
     
     if event == sg.WINDOW_CLOSED or event == 'Exit the program':
         break
