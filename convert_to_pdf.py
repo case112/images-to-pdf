@@ -26,7 +26,7 @@ layout = [
         sg.Text('Convert multiple folders or a single folder:', pad=((0, 0),(20,2)))
     ],
     [
-        sg.Radio('Multiple', "RADIO", key='multi', default=True),
+        sg.Radio('Multi', "RADIO", key='multi', default=True),
         sg.Radio('Single', "RADIO", key='single'),
     ],
     [
@@ -86,7 +86,7 @@ def convert_dir(selected_directory):
         return converted_dir
 
 
-window = sg.Window('Convert to PDF', layout)
+window = sg.Window('Convert Images to PDF', layout)
 
 while True:
     event, values = window.read()
