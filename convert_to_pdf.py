@@ -67,22 +67,33 @@ def convert_dir(selected_directory):
     global pages
     global file_problem
     global problematic_files
+    first_page = False
     pages = []
+    counter = 0
+    pdf_path_name = os.path.dirname(selected_directory) + os.sep + os.path.basename(selected_directory) + '.pdf'
     for file_in_dir in os.listdir(selected_directory):
+        counter += 1
+        sg.one_line_progress_meter('Converting directory', counter+1, len(os.listdir(selected_directory)), 'key','Currently converting: ' + os.path.basename(selected_directory))
         if file_in_dir.lower().endswith(extension):
             file_path = selected_directory + os.sep + file_in_dir
             try:
                 page = Image.open(file_path)
-                pages.append(page.convert("RGB"))
+                page = (page.convert("RGB"))
+                pages.append(file_path)
+                if first_page == False:
+                    page.save(pdf_path_name, append_images=page)
+                    first_page = True
+                page.save(pdf_path_name, append=page)
                 page.close()
+
             except:
                 file_problem = True
                 problematic_files.append(file_in_dir)
-            pdf_path_name = os.path.dirname(selected_directory) + os.sep + os.path.basename(selected_directory) + '.pdf'
+
+            
 
     if pages != []:
-        print("Generating PDF " + pdf_path_name)
-        pages[0].save(pdf_path_name, save_all = True, append_images=pages[1:])
+        print("Generated PDF " + pdf_path_name)
         converted_dir = os.path.basename(selected_directory)
         return converted_dir
 
