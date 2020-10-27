@@ -71,9 +71,9 @@ def convert_dir(selected_directory):
     pages = []
     counter = 0
     pdf_path_name = os.path.dirname(selected_directory) + os.sep + os.path.basename(selected_directory) + '.pdf'
-    for file_in_dir in os.listdir(selected_directory):
+    for file_in_dir in sorted(os.listdir(selected_directory)):
         counter += 1
-        
+
         if not sg.one_line_progress_meter('Converting...', counter+1, len(os.listdir(selected_directory)), 'key','Currently converting: ' + os.path.basename(selected_directory)):
             break
 
