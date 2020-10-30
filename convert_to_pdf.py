@@ -1,3 +1,4 @@
+from typing import Counter
 from PIL import Image
 import PySimpleGUI as sg
 import os
@@ -56,11 +57,11 @@ def convert_multiple_dirs(selected_directory):
                 converted_dirs.append(converted_dir)
 
         if converted_dirs != []:
-            sg.Popup('Converted ' + str(len(converted_dirs)) + ' folders to location: ' + os.path.normpath(selected_directory + os.sep + os.pardir), title='Done!')
+            sg.Popup('Converted ' + str(len(converted_dirs)) + ' folders to location: ' + os.path.normpath(selected_directory + os.sep + os.pardir), title='Done!', icon=ICON)
         else:
-            sg.Popup('No additional folders with required extensions found! Did you select the right path?', title='Error!')
+            sg.Popup('No additional folders with required extensions found! Did you select the right path?', title='Error!', icon=ICON)
     else:
-        sg.Popup('No additional folders with required extensions found! Did you select the right path?', title='Error!')
+        sg.Popup('No additional folders with required extensions found! Did you select the right path?', title='Error!', icon=ICON)
 
 
 def convert_dir(selected_directory):
@@ -71,13 +72,27 @@ def convert_dir(selected_directory):
     pages = []
     counter = -1
     pdf_path_name = os.path.dirname(selected_directory) + os.sep + os.path.basename(selected_directory) + '.pdf'
-    print(sorted(os.listdir(selected_directory)))
+
+    layout = [
+        [sg.Text('Folder:  ' + os.path.basename(selected_directory))],
+        [sg.Text('File:'), sg.Text(size=(50,1), key='output')],
+        [sg.ProgressBar(1, orientation='h', size=(40, 30), key='progress')],
+        [sg.Cancel()]
+        ]
+    window = sg.Window('Converting...', layout, icon=ICON)
+    progress_bar = window['progress']
+
     for file_in_dir in sorted(os.listdir(selected_directory)):
         counter += 1
 
+        event, values = window.read(timeout=0)
+        if event == 'Cancel' or event == None:
+            break
+        window['output'].update(file_in_dir)
+        progress_bar.update_bar(counter, len(os.listdir(selected_directory)))
+
         if file_in_dir.lower().endswith(extension):
             file_path = selected_directory + os.sep + file_in_dir
-            print(file_path)
             try:
                 page = Image.open(file_path)
                 page = (page.convert("RGB"))
@@ -93,16 +108,9 @@ def convert_dir(selected_directory):
                 file_problem = True
                 problematic_files.append(file_in_dir)
 
+    window.close()
 
-        if not sg.one_line_progress_meter(
-            'Converting...',
-            counter+1,
-            len(os.listdir(selected_directory)),
-            'key',
-            'Currently converting: ' + os.path.basename(selected_directory),
-            no_titlebar=True,
-            grab_anywhere=True):
-            break
+        
             
 
     if pages != []:
@@ -136,7 +144,7 @@ while True:
             sg.PopupScrolled(*problematic_files, size=(60, None), title="These files can't be converted:")
             problematic_files = []
         if extension == ():
-            sg.Popup('Please select file extension first!', title='Error!')
+            sg.Popup('Please select file extension first!', title='Error!', icon=ICON)
         extension = ()
         ext = ''
 
@@ -145,17 +153,17 @@ while True:
             file_problem = False
             convert_dir(selected_directory)
             if len(pages) > 1 and problematic_files == []:
-                sg.Popup('Converted ' + str(len(pages)) + ' images to location: ' + selected_directory + '.pdf', title='Done!')
+                sg.Popup('Converted ' + str(len(pages)) + ' images to location: ' + selected_directory + '.pdf', title='Done!', icon=ICON)
             if len(pages) > 1 and problematic_files != []:
-                sg.Popup('Converted ' + str(len(pages)) + ' images to location: ' + selected_directory + '.pdf', title='Done!')
+                sg.Popup('Converted ' + str(len(pages)) + ' images to location: ' + selected_directory + '.pdf', title='Done!', icon=ICON)
                 sg.PopupScrolled(*problematic_files, size=(60, None), title="These files can't be converted:")
                 problematic_files = []
             if file_problem == False and pages == []:
                 for x in range(len(extension)):
                     ext += str(extension[x]) + ' '
-                sg.Popup('No " ' + ext +'" files found!', title='Error!')
+                sg.Popup('No " ' + ext +'" files found!', title='Error!', icon=ICON)
         else:
-            sg.Popup('Please select file extension first!', title='Error!')
+            sg.Popup('Please select file extension first!', title='Error!', icon=ICON)
 
         extension = ()
         ext = ''
