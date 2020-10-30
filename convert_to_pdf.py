@@ -21,11 +21,11 @@ extensions = (
 checkboxes = [sg.Checkbox(extensions[i], key=extensions[i]) for i in range(len(extensions))]
 layout = [
     [
-        sg.Text('Select file extension to convert:', pad=((0, 0),(5,2)))
+        sg.Text('Select extension:', pad=((5, 0),(5,2)))
     ],
     checkboxes,
     [
-        sg.Text('Convert multiple folders or a single folder:', pad=((0, 0),(20,2)))
+        sg.Text('Convert multiple or a single folder:', pad=((5, 0),(20,2)))
     ],
     [
         sg.Radio('Multi', "RADIO", key='multi', default=True),
@@ -35,13 +35,11 @@ layout = [
         sg.Input(key='user_input_path', enable_events=True, visible=False)
     ],
     [
-        sg.FolderBrowse('Browse', enable_events=True, target='user_input_path', size=(10,2), initial_folder=start_path, pad=((0, 0),(20,25))),
+        sg.FolderBrowse('Browse', enable_events=True, target='user_input_path', size=(10,2), initial_folder=start_path, pad=((5, 0),(20,25))),
         sg.Text('Path:', size=(4,3)), sg.Text(size=(50,3), key='selected_path')
     ],
     [
-        sg.Button('Convert', key='convert_btn', disabled=True, button_color=('white', '#2ea44f')),
-        sg.Text(' '),
-        sg.Button('Exit the program', button_color=('white', '#d73a49'))
+        sg.Button('Convert', size=(10,1), key='convert_btn', disabled=True, button_color=('white', '#2ea44f'), pad=((5, 0),(0,10))),
     ]      
 ]
 
@@ -57,7 +55,7 @@ def convert_multiple_dirs(selected_directory):
                 converted_dirs.append(converted_dir)
 
         if converted_dirs != []:
-            sg.Popup('Converted ' + str(len(converted_dirs)) + ' folders to location: ' + os.path.normpath(selected_directory + os.sep + os.pardir), title='Done!', icon=ICON)
+            sg.Popup('Converted ' + str(len(converted_dirs)) + ' folders to: ' + os.path.normpath(selected_directory + os.sep + os.pardir), title='Done!', icon=ICON)
         else:
             sg.Popup('No additional folders with required extensions found! Did you select the right path?', title='Error!', icon=ICON)
     else:
@@ -124,7 +122,7 @@ window = sg.Window('Convert Images to PDF', layout, icon=ICON)
 while True:
     event, values = window.read()
     
-    if event == sg.WINDOW_CLOSED or event == 'Exit the program':
+    if event == sg.WINDOW_CLOSED:
         break
 
     for i in range(len(extensions)):
@@ -144,7 +142,7 @@ while True:
             sg.PopupScrolled(*problematic_files, size=(60, None), title="These files can't be converted:")
             problematic_files = []
         if extension == ():
-            sg.Popup('Please select file extension first!', title='Error!', icon=ICON)
+            sg.Popup('Please select extension first!', title='Error!', icon=ICON)
         extension = ()
         ext = ''
 
@@ -153,9 +151,9 @@ while True:
             file_problem = False
             convert_dir(selected_directory)
             if len(pages) > 1 and problematic_files == []:
-                sg.Popup('Converted ' + str(len(pages)) + ' images to location: ' + selected_directory + '.pdf', title='Done!', icon=ICON)
+                sg.Popup('Converted ' + str(len(pages)) + ' images to: ' + selected_directory + '.pdf', title='Done!', icon=ICON)
             if len(pages) > 1 and problematic_files != []:
-                sg.Popup('Converted ' + str(len(pages)) + ' images to location: ' + selected_directory + '.pdf', title='Done!', icon=ICON)
+                sg.Popup('Converted ' + str(len(pages)) + ' images to: ' + selected_directory + '.pdf', title='Done!', icon=ICON)
                 sg.PopupScrolled(*problematic_files, size=(60, None), title="These files can't be converted:")
                 problematic_files = []
             if file_problem == False and pages == []:
@@ -163,7 +161,7 @@ while True:
                     ext += str(extension[x]) + ' '
                 sg.Popup('No " ' + ext +'" files found!', title='Error!', icon=ICON)
         else:
-            sg.Popup('Please select file extension first!', title='Error!', icon=ICON)
+            sg.Popup('Please select extension first!', title='Error!', icon=ICON)
 
         extension = ()
         ext = ''
